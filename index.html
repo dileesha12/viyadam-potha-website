@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Viyadam Potha - Expense & OT Tracker</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --vp-primary: #3a0ca3; /* Deep Purple */
+      --vp-primary-light: #5e23c7; /* Lighter shade for hover/active */
+      --vp-secondary: #4361ee; /* Bright Blue - For accents and CTAs */
+      --vp-accent: #f72585; /* Vibrant Pink - For specific highlights */
+      
+      --vp-bg-main: #f8f9fc; /* Slightly bluish off-white */
+      --vp-bg-section-light: #ffffff;
+      --vp-bg-section-alt: #f0f2f8; /* Alternative section background */
+
+      --vp-text-dark: #1d2129; /* Darker text for better contrast */
+      --vp-text-medium: #495057;
+      --vp-text-light: #6c757d;
+
+      --vp-card-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      --vp-card-hover-shadow: 0 12px 30px rgba(58, 12, 163, 0.12);
+      --vp-border-radius: 12px;
+
+      --bs-primary: var(--vp-primary);
+      --bs-primary-rgb: 58, 12, 163;
+      --bs-secondary: var(--vp-secondary);
+      --bs-secondary-rgb: 67, 97, 238;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--vp-bg-main);
+      color: var(--vp-text-dark);
+      font-weight: 400;
+      overflow-x: hidden; 
+      line-height: 1.6; /* Improved default line height for readability */
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.3; /* Consistent line height for headings */
+    }
+
+    .navbar {
+        transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 2rem; 
+      color: var(--vp-primary) !important;
+    }
+    .navbar.scrolled { 
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--vp-text-medium) !important;
+      transition: color 0.3s, transform 0.2s, border-bottom-color 0.3s;
+      padding: 0.5rem 1rem !important; 
+      border-bottom: 3px solid transparent;
+    }
+    .nav-link:hover, 
+    .nav-link.active { 
+      color: var(--vp-primary) !important;
+      transform: translateY(-1px);
+      border-bottom-color: var(--vp-primary);
+    }
+    .navbar-nav .nav-item:last-child .nav-link {
+        margin-right: 0.5rem; 
+    }
+
+    .btn {
+        border-radius: var(--vp-border-radius);
+        padding: 0.75rem 1.75rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        border: none; /* Removed default border for cleaner gradient buttons */
+    }
+    .btn-primary {
+      background-color: var(--vp-primary); /* Fallback */
+      background-image: linear-gradient(135deg, var(--vp-primary-light) 0%, var(--vp-primary) 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: var(--vp-primary-light); /* Fallback */
+      background-image: linear-gradient(135deg, var(--vp-primary) 0%, var(--vp-primary-light) 100%);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 4px 15px rgba(var(--bs-primary-rgb), 0.35); /* Slightly enhanced shadow */
+      color: white;
+    }
+    .btn-secondary {
+        background-color: var(--vp-secondary); /* Fallback */
+        background-image: linear-gradient(135deg, #6980f1 0%, var(--vp-secondary) 100%);
+        color: white;
+    }
+     .btn-secondary:hover {
+        background-color: #3652d4; /* Fallback */
+        background-image: linear-gradient(135deg, var(--vp-secondary) 0%, #3652d4 100%);
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 4px 15px rgba(var(--bs-secondary-rgb), 0.35); /* Slightly enhanced shadow */
+        color: white;
+    }
+    .btn-outline-primary { /* Outline buttons will keep their border */
+        color: var(--vp-primary);
+        border: 2px solid var(--vp-primary); /* Made border slightly thicker */
+        background-color: transparent;
+    }
+    .btn-outline-primary:hover {
+        background-color: var(--vp-primary);
+        color: white;
+        border-color: var(--vp-primary);
+    }
+    .btn-lg {
+        padding: 0.9rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .hero {
+      /* New Branded Light Gradient Background */
+      background: linear-gradient(135deg, #e1daf1 0%, #e2e7fc 100%); 
+      padding: 6rem 0;
+      position: relative;
+      overflow: hidden; 
+    }
+    .hero::before { 
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        opacity: 0.05;
+        z-index: 0;
+    }
+    .hero .container {
+        position: relative; 
+        z-index: 1;
+    }
+    .hero h1 {
+      font-size: 3.2rem; 
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--vp-text-dark);
+      margin-bottom: 1.5rem;
+    }
+    .hero p.lead {
+      font-size: 1.25rem;
+      color: var(--vp-text-medium);
+      margin-bottom: 2.5rem;
+      max-width: 650px; 
+    }
+    .hero-img-container {
+        perspective: 1500px; 
+    }
+    .hero-img {
+      width: 100%;
+      max-width: 420px; 
+      border-radius: 24px; /* Increased radius for softer look */
+      box-shadow: 0 15px 45px rgba(58, 12, 163, 0.2);
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform: rotateY(-10deg) rotateX(5deg); 
+    }
+    .hero-img-container:hover .hero-img {
+      transform: rotateY(0deg) rotateX(0deg) scale(1.05); 
+    }
+
+    .section-title {
+      font-size: 2.6rem;
+      margin-bottom: 4rem;
+      color: var(--vp-primary);
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    .section-title::after { 
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background-color: var(--vp-secondary);
+        border-radius: 2px;
+    }
+
+    .feature-card {
+      background-color: var(--vp-bg-section-light);
+      /* border: 1px solid #e9ecef; Removed generic border */
+      border-top: 4px solid var(--vp-primary); /* Added accent top border */
+      box-shadow: var(--vp-card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+      border-radius: var(--vp-border-radius);
+    }
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--vp-card-hover-shadow);
+    }
+    .feature-card .card-title {
+      color: var(--vp-primary);
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    .feature-card .card-text {
+        font-size: 0.98rem;
+        color: var(--vp-text-medium);
+        line-height: 1.7;
+    }
+    .feature-icon {
+      font-size: 3rem; 
+      background-image: linear-gradient(135deg, var(--vp-primary), var(--vp-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.2rem;
+      display: inline-block; 
+    }
+    
+    #screenshots-section {
+        background-color: var(--vp-bg-section-alt);
+    }
+    .screenshot-card {
+        overflow: hidden; 
+        border: none; /* Kept no border for screenshot cards */
+        box-shadow: var(--vp-card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: var(--vp-border-radius); /* Ensure screenshot cards also have the global radius */
+    }
+    .screenshot-card:hover {
+        transform: scale(1.05);
+        box-shadow: var(--vp-card-hover-shadow);
+    }
+    .screenshot-img { 
+        border-radius: var(--vp-border-radius); /* Inherit or set explicitly if card doesn't clip well */
+        object-fit: cover; 
+        height: 100%; 
+        width: 100%;  
+    }
+
+    #download-section {
+      background: linear-gradient(135deg, var(--vp-primary) 0%, var(--vp-secondary) 100%);
+      color: white;
+    }
+    #download-section .section-title {
+        color: white;
+    }
+    #download-section .section-title::after {
+        background-color: var(--vp-accent);
+    }
+    #download-section .lead {
+        color: rgba(255,255,255,0.9); /* Slightly more opaque for better readability */
+    }
+    .btn-download { /* This button uses accent color, kept its original distinct style */
+        background-color: var(--vp-accent);
+        border-color: var(--vp-accent); /* Kept border color if it relies on it */
+        border-width: 2px; /* Ensure border is visible if color is same as bg */
+        border-style: solid;
+        color: white;
+    }
+    .btn-download:hover {
+        background-color: #d90b69; 
+        border-color: #d90b69;
+        box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+    }
+
+    #contact-section {
+        background-color: var(--vp-bg-section-light);
+    }
+
+    .footer {
+      background-color: #2A0A73; /* Darker branded purple */
+      color: rgba(255,255,255,0.75); /* Slightly increased opacity for footer text */
+      padding: 3rem 0;
+    }
+    .footer p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991.98px) { 
+        .hero h1 { font-size: 2.6rem; }
+        .hero p.lead { font-size: 1.15rem; }
+        .hero-img-container { margin-top: 2rem; text-align:center; }
+        .hero-img { transform: rotateY(0deg) rotateX(0deg); }
+        .navbar-nav { align-items: center; }
+    }
+    @media (max-width: 767.98px) { 
+        .navbar-brand { font-size: 1.6rem; }
+        .hero h1 { font-size: 2.2rem; }
+        .hero p.lead { font-size: 1.05rem; }
+        .section-title { font-size: 2rem; margin-bottom: 2.5rem; }
+        .feature-card .card-title { font-size: 1.2rem; }
+        .btn, .btn-lg { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
+        .btn-lg { padding: 0.75rem 1.5rem; }
+
+        #screenshot-container.row {
+          display: flex; 
+          flex-wrap: nowrap; 
+          overflow-x: auto; 
+          -webkit-overflow-scrolling: touch; 
+          justify-content: flex-start !important; 
+          padding-bottom: 1rem; 
+          margin-left: calc(-1 * var(--bs-gutter-x, 0.75rem) / 2); /* Adjust to align with container edges if needed */
+          margin-right: calc(-1 * var(--bs-gutter-x, 0.75rem) / 2);
+        }
+        #screenshot-container.row > * { /* Add padding to simulate container padding for first/last visible items */
+            padding-left: calc(var(--bs-gutter-x, 0.75rem) / 2);
+            padding-right: calc(var(--bs-gutter-x, 0.75rem) / 2);
+        }
+
+
+        #screenshot-container > .col-md-4,
+        #screenshot-container > .col-sm-6 { 
+          flex: 0 0 auto; 
+          width: 80vw;    
+          max-width: 300px; 
+          height: auto;  
+          display: block !important; 
+          /* Overriding g-4 column padding for direct control if 'gap' is used on parent */
+          /* If parent #screenshot-container has 'gap', then these can be 0 */
+          /* padding-left: 0 !important; */ /* Using g-4 for spacing */
+          /* padding-right: 0 !important; */
+        }
+        
+        #screenshot-container .screenshot-card {
+          width: 100% !important; 
+          height: auto !important; 
+          margin-bottom: 0; 
+        }
+
+        #screenshot-container .screenshot-img {
+          height: auto !important; 
+        }
+    }
+  </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="80">
+
+  <nav class="navbar navbar-expand-lg bg-white fixed-top shadow-sm" id="mainNavbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">Viyadam Potha</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#hero-section">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#features-section">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#screenshots-section">Images</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#download-section">Download</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact-section">Contact</a>
+          </li>
+        </ul>
+        <a href="#download-section" class="btn btn-primary d-none d-lg-inline-block">Get the App</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero-section">
+    <div class="container">
+      <div class="row align-items-center gy-5">
+        <div class="col-lg-7 text-center text-lg-start"> 
+          <h1>Smartly Track Your Expenses & Overtime with Viyadam Potha</h1>
+          <p class="lead">
+            Viyadam Potha empowers you to effortlessly manage daily expenses, meticulously track normal & double OT, accurately calculate overtime earnings, handle loans, leases, and chit funds. Gain comprehensive control over your finances — all in one secure, cloud-synced application.
+          </p>
+          <a href="#download-section" class="btn btn-primary btn-lg me-2 mb-2 mb-lg-0">
+            <i class="bi bi-cloud-download-fill me-2"></i>Download Now
+          </a>
+          <a href="#features-section" class="btn btn-secondary btn-lg mb-2 mb-lg-0">
+            Learn More <i class="bi bi-arrow-right-short"></i>
+          </a>
+        </div>
+        <div class="col-lg-5 hero-img-container"> 
+          <img src="images/photo1.jpg" alt="Viyadam Potha App Preview" class="hero-img img-fluid mx-auto d-block" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5" id="features-section" style="background-color: var(--vp-bg-section-alt);">
+    <div class="container">
+      <h2 class="section-title">Powerful Features, Simple Control</h2>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-pie-chart-fill"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Dashboard Overview</h3>
+              <p class="card-text">Instantly view your basic salary, estimated monthly OT earnings, and total daily costs for the current month.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-alarm-fill"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Detailed OT Tracker</h3>
+              <p class="card-text">Record Normal/Double OT & In/Out times. Configure holiday/weekend policies for precise earning calculations.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-cart-check-fill"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Daily Expense Logging</h3>
+              <p class="card-text">Track meals, canteen, shopping, orders, and rental costs with ease. View expenses on a monthly calendar.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-bank2"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Finance Hub</h3>
+              <p class="card-text">Manage bank loans, vehicle finances, and chit funds. Track installments, payments, and balances efficiently.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Summaries & History</h3>
+              <p class="card-text">Generate custom date range reports for OT, earnings & costs. Save summaries for future reference.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="card feature-card p-4 text-center w-100">
+            <div class="feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title mt-auto">Robust Security</h3>
+              <p class="card-text">Secure your financial data with PIN lock and Biometric authentication. Your information is protected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5" id="screenshots-section">
+      <div class="container">
+          <h2 class="section-title">See Viyadam Potha in Action</h2>
+          <p class="text-center text-muted lead mb-5" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+            Explore the intuitive interface and powerful features designed to simplify your financial tracking.
+          </p>
+          <div class="row g-4 justify-content-center" id="screenshot-container"> 
+              <div class="col-md-4 col-sm-6 d-flex">
+                  <div class="card screenshot-card h-100 w-100"> 
+                    <img src="images/photo4.jpg" class="screenshot-img" alt="Viyadam Potha Dashboard Screenshot">
+                  </div>
+              </div>
+              <div class="col-md-4 col-sm-6 d-flex">
+                 <div class="card screenshot-card h-100 w-100">
+                    <img src="images/photo3.jpg" class="screenshot-img" alt="Viyadam Potha OT Tracker Screenshot">
+                 </div>
+              </div>
+              <div class="col-md-4 col-sm-6 d-flex">
+                  <div class="card screenshot-card h-100 w-100">
+                    <img src="images/photo.jpg" class="screenshot-img" alt="Viyadam Potha Finance Hub Screenshot">
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="py-5" id="download-section">
+      <div class="container text-center">
+          <h2 class="section-title">Ready to Take Control?</h2>
+          <p class="lead mb-4" style="max-width: 700px; margin-left: auto; margin-right: auto;">
+              Stop guessing and start knowing. Download Viyadam Potha today and transform how you manage your overtime and expenses.
+          </p>
+          <a href="https://drive.google.com/file/d/1C6KoterUiQFoTf-3pFE7nf6XxoibfFvy/view?usp=drive_link" class="btn btn-download btn-lg mt-3">
+            <i class="bi bi-google-play me-2"></i> Get Viyadam Potha on Android
+          </a>
+          <p class="mt-3" style="font-size:0.9rem; opacity: 0.8;">(Illustrative download link - App coming soon!)</p>
+      </div>
+  </section>
+
+  <section class="py-5" id="contact-section">
+      <div class="container text-center" style="max-width: 700px;">
+          <h2 class="section-title">Get in Touch</h2>
+          <p class="text-muted lead mb-4">
+            We value your feedback and are here to help with any questions you might have. Reach out to us!
+          </p>
+          <a href="mailto:contact@viyadampotha.app" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-envelope-paper-heart-fill me-2"></i> Email Us
+          </a>
+          <p class="mt-3 text-muted">(dileeshamadhuranga@gmail.com)</p>
+      </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Viyadam Potha. All rights reserved. Simplifying your financial life.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('mainNavbar');
+    if (navbar) {
+        const navbarHeight = navbar.offsetHeight;
+        const scrollSpyBody = document.querySelector('body[data-bs-spy="scroll"]');
+        if (scrollSpyBody) {
+            scrollSpyBody.setAttribute('data-bs-offset', navbarHeight + 20);
+        }
+
+        window.onscroll = () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+    }
+
+    // Optional: Close mobile navbar on link click
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    const navbarMenu = document.getElementById('navbarNav');
+    if (navbarMenu) {
+        const bsCollapse = new bootstrap.Collapse(navbarMenu, {
+            toggle: false 
+        });
+        navLinks.forEach((link) => {
+            link.addEventListener('click', () => {
+                if (navbarMenu.classList.contains('show')) {
+                    bsCollapse.hide();
+                }
+            });
+        });
+    }
+  </script>
+</body>
+</html>
